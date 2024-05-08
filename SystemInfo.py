@@ -5,6 +5,7 @@ from screeninfo import get_monitors
 from cpuinfo import get_cpu_info
 import datetime
 from colorama import Fore, Style
+from itertools import zip_longest
 
 # Check the operating system
 os_info = "OS:      {}{}".format(Fore.WHITE, platform.system())
@@ -21,7 +22,7 @@ uptime_info = "Uptime:  {}{} days, {} hours, {} minutes{}".format(Fore.WHITE, da
 
 # Get the screen resolution
 primary_monitor = get_monitors()[0]
-screen_info = "Screen: {}{}*{}{}".format(Fore.WHITE, primary_monitor.width, primary_monitor.height, Style.RESET_ALL)
+screen_info = "Screen:  {}{}*{}{}".format(Fore.WHITE, primary_monitor.width, primary_monitor.height, Style.RESET_ALL)
 
 # Get the CPU information
 cpu_info = "CPU:     {}{}".format(Fore.WHITE, get_cpu_info()['brand_raw'])
@@ -45,17 +46,44 @@ for disk in psutil.disk_partitions():
         disk_info.append("({}):    [Permission Denied]".format(disk.device))
 
 # Part 1
-part1 = "\n".join([
-    Fore.BLUE + "lllllll lllllll",
-    Fore.BLUE + "lllllll lllllll",
-    Fore.BLUE + "lllllll lllllll",
-    "                     ",
-    Fore.BLUE + "lllllll lllllll",
-    Fore.BLUE + "lllllll lllllll",
-    Fore.BLUE + "lllllll lllllll"
-])
-
-# Part 2
+# if os_info == "Apple":
+    part1 = "\n".join([
+        Fore.BLUE + "llllllllll llllllllll",
+        Fore.BLUE + "llllllllll llllllllll",
+        Fore.BLUE + "llllllllll llllllllll",
+        Fore.BLUE + "llllllllll llllllllll",
+        Fore.BLUE + "                     ",
+        Fore.BLUE + "llllllllll llllllllll",
+        Fore.BLUE + "llllllllll llllllllll",
+        Fore.BLUE + "llllllllll llllllllll",
+        Fore.BLUE + "llllllllll llllllllll",
+    ])
+""" elif os_info == "Arch":
+    part1 = "\n".join([
+        Fore.BLUE + "                     ",
+        Fore.BLUE + "          ll         ",
+        Fore.BLUE + "         llll        ",
+        Fore.BLUE + "        l llll       ",
+        Fore.BLUE + "       lllllllll     ",
+        Fore.BLUE + "     lllll  lllll    ",
+        Fore.BLUE + "    lllll    lllll   ",
+        Fore.BLUE + "   llllll    llllll  ",
+        Fore.BLUE + " ll                ll",
+        ])
+elif os_info == "Windows":
+    part1 = "\n".join([
+        Fore.WHITE +  "               (     ",
+        Fore.GREEN +  "           ((((      ",
+        Fore.GREEN +  "           (((       ",
+        Fore.GREEN +  "   ((((((((((((((((( ",
+        Fore.RED +    " ,,,,,,,,,,,,,,,,,,  ",
+        Fore.RED +    " /////////////////   ",
+        Fore.RED +    " /////////////////   ",
+        Fore.RED +    " ((((((((((((((((((( ",
+        Fore.BLUE +   "  (((((((((((((((((((",
+        Fore.BLUE +   "    (((((((((((((((  ",
+        ])
+ """
 part2 = "\n".join([
     os_info,
     uptime_info,
@@ -65,5 +93,5 @@ part2 = "\n".join([
 ] + disk_info)
 
 # Print in two columns
-for line1, line2 in zip(part1.split("\n"), part2.split("\n")):
+for line1, line2 in zip_longest(part1.split("\n"), part2.split("\n"), fillvalue=''):
     print("{:<40} {:<40}".format(line1, line2))
