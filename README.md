@@ -36,10 +36,10 @@ llllllllll llllllllll               OS:      Windows
 llllllllll llllllllll               Uptime:  0 days, 1 hours, 49 minutes
 llllllllll llllllllll               Screen:  1920*1200
 llllllllll llllllllll               CPU:     AMD Ryzen 5 7530U with Radeon Graphics
-                                    RAM:     [///////////////////////////////////////////////   ]
-llllllllll llllllllll               (C:\):   [///////////////////////////////////////           ]
-llllllllll llllllllll               (D:\):   [////////                                          ]
-llllllllll llllllllll               (E:\):   [////////////////////////////////////////          ]
+                                    RAM:     [///////////////////////////////////////////////  ]
+llllllllll llllllllll               (C:\):   [///////////////////////////////////////          ]
+llllllllll llllllllll               (D:\):   [////////                                         ]
+llllllllll llllllllll               (E:\):   [////////////////////////////////////////         ]
 llllllllll llllllllll
 ```
 
