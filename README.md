@@ -1,6 +1,6 @@
 # SysInfo
 
-SysInfo is a Python project that provides detailed system information. It uses various libraries such as `os`, `platform`, `psutil`, `screeninfo`, `cpuinfo`, `datetime`, `colorama`, and `itertools`.
+SysInfo is a Python project that provides detailed system information in the Terminal.
 
 ## Table of Contents
 
@@ -29,12 +29,23 @@ After installation, you can run the script by simply typing `SysInfo` in your te
 ```bash
 SysInfo
 ```
+Then you will see the following output:
 
-In this example, the program will start and display detailed system information.
+```bash
+llllllllll llllllllll               OS:      Windows
+llllllllll llllllllll               Uptime:  0 days, 1 hours, 49 minutes
+llllllllll llllllllll               Screen:  1920*1200
+llllllllll llllllllll               CPU:     AMD Ryzen 5 7530U with Radeon Graphics
+                                    RAM:     [///////////////////////////////////////////////   ]
+llllllllll llllllllll               (C:\):   [///////////////////////////////////////           ]
+llllllllll llllllllll               (D:\):   [////////                                          ]
+llllllllll llllllllll               (E:\):   [////////////////////////////////////////          ]
+llllllllll llllllllll
+```
 
 ## Bugs
 
-Currently, there are no known bugs. If you find any, please open an issue in the GitHub repository.
+Currently, there is only a bug that I am aware of. The script does not work on Linux or MacOS. This is because the script uses the `psutil` library, which is not available on Linux or MacOS. I am working on a solution to this problem.
 
 ## Contributing
 
