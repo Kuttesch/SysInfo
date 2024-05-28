@@ -4,24 +4,13 @@ import shutil
 import sys
 import re
 
+alias = "SysInfo"
 # Ask the user if they want to install Sysinfo
 user_input = input("Do you want to install Sysinfo including all necessary libraries? (y/n): ")
 
 # Check if the user wants to install Sysinfo
 if user_input.lower() == 'y':
     print("Installing Sysinfo...")
-
-        # Check if the PowerShell profile exists
-    profile_check = subprocess.run(['powershell', '-Command', 'Test-Path $PROFILE'], capture_output=True, text=True)
-
-    # If the profile doesn't exist, ask the user if they want to create it
-    if 'False' in profile_check.stdout:
-        user_input = input("A PowerShell profile does not exist. Do you want to create one? (y/n): ")
-        if user_input.lower() == 'y':
-            subprocess.run(['powershell', '-Command', 'New-Item -path $PROFILE -type file -force'], check=True)
-        else:
-            print("Quitting installation...")
-            sys.exit(0)
 
     # Path to the SystemInfo.py script
     script_path = os.path.abspath('SysInfo.py')
@@ -43,6 +32,26 @@ if user_input.lower() == 'y':
     # Create the folder
     os.makedirs(folder_path, exist_ok=True)
 
+    # Check if the PowerShell profile exists
+    profile_check = subprocess.run(['powershell', '-Command', 'Test-Path $PROFILE'], capture_output=True, text=True, encoding='utf-8', errors='ignore')
+    alias_check = subprocess.run(['powershell', '-Command', f'Get-Alias -Name {alias}'], capture_output=True, text=True, encoding='utf-8', errors='ignore')
+    if 'True' in profile_check.stdout:
+        if alias in alias_check.stdout:
+            pass
+        else:
+            command = f'Add-Content -Path $PROFILE -Value "function SysInfo {{ python {script_path} }}"'
+            subprocess.run(['powershell', '-Command', command], check=True)
+    # If the profile doesn't exist, ask the user if they want to create it
+    if 'False' in profile_check.stdout:
+        user_input = input("A PowerShell profile does not exist. Do you want to create one? (y/n): ")
+        if user_input.lower() == 'y':
+            subprocess.run(['powershell', '-Command', 'New-Item -path $PROFILE -type file -force'], check=True)
+            command = f'Add-Content -Path $PROFILE -Value "function SysInfo {{ python {script_path} }}"'
+            subprocess.run(['powershell', '-Command', command], check=True)
+        else:
+            print("Quitting installation...")
+            sys.exit(0)
+
      # List of necessary libraries
     libraries = ['psutil', 'screeninfo', 'py-cpuinfo', 'colorama']
 
@@ -57,10 +66,10 @@ if user_input.lower() == 'y':
     script_path = os.path.join(folder_path, 'SysInfo.py')
 
     # PowerShell command to add the alias
-    command = f'Add-Content -Path $PROFILE -Value "function SysInfo {{ python {script_path} }}"'
+    #command = f'Add-Content -Path $PROFILE -Value "function SysInfo {{ python {script_path} }}"'
 
     # Run the command in PowerShell
-    subprocess.run(['powershell', '-Command', command], check=True)
+    #subprocess.run(['powershell', '-Command', command], check=True)
 
     # Print the success message
     print("Sysinfo has been installed successfully!")
