@@ -24,7 +24,7 @@ if user_input.lower() == 'y':
             sys.exit(0)
 
     # Path to the SystemInfo.py script
-    script_path = os.path.abspath('SystemInfo.py')
+    script_path = os.path.abspath('SysInfo.py')
 
     # Ask the user if they want to use the default install path
     user_input = input("Do you want to use the default install path (~/Documents/SysInfo)? If not, please specify your desired path: ")
@@ -51,10 +51,10 @@ if user_input.lower() == 'y':
         subprocess.run([sys.executable, '-m', 'pip', 'install', library])
 
     # Copy the SystemInfo.py script to the folder
-    shutil.copy(script_path, os.path.join(folder_path, 'SystemInfo.py'))
+    shutil.copy(script_path, os.path.join(folder_path, 'SysInfo.py'))
 
     # Update the script path to the new location
-    script_path = os.path.join(folder_path, 'SystemInfo.py')
+    script_path = os.path.join(folder_path, 'SysInfo.py')
 
     # PowerShell command to add the alias
     command = f'Add-Content -Path $PROFILE -Value "function SysInfo {{ python {script_path} }}"'
