@@ -4,6 +4,7 @@ import shutil
 import sys
 import re
 
+
 alias = "SysInfo"
 # Ask the user if they want to install Sysinfo
 user_input = input("Do you want to install Sysinfo including all necessary libraries? (y/n): ")
@@ -38,9 +39,11 @@ if user_input.lower() == 'y':
     if 'True' in profile_check.stdout:
         if alias in alias_check.stdout:
             pass
+            print("DEBUG: Alias already exists")
         else:
             command = f'Add-Content -Path $PROFILE -Value "function SysInfo {{ python {script_path} }}"'
             subprocess.run(['powershell', '-Command', command], check=True)
+            print("DEBUG: Profile existed, added alias")
     # If the profile doesn't exist, ask the user if they want to create it
     if 'False' in profile_check.stdout:
         user_input = input("A PowerShell profile does not exist. Do you want to create one? (y/n): ")
@@ -48,11 +51,12 @@ if user_input.lower() == 'y':
             subprocess.run(['powershell', '-Command', 'New-Item -path $PROFILE -type file -force'], check=True)
             command = f'Add-Content -Path $PROFILE -Value "function SysInfo {{ python {script_path} }}"'
             subprocess.run(['powershell', '-Command', command], check=True)
+            print("DEBUG: Profile didn't exist, created and added alias")
         else:
             print("Quitting installation...")
             sys.exit(0)
 
-     # List of necessary libraries
+    # List of necessary libraries
     libraries = ['psutil', 'screeninfo', 'py-cpuinfo', 'colorama']
 
     # Install the necessary libraries
