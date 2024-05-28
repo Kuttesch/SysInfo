@@ -63,7 +63,14 @@ def install():
 
     # Install the necessary libraries
     for library in libraries:
-        subprocess.run([sys.executable, '-m', 'pip', 'install', library])
+        try:
+            result = subprocess.run([sys.executable, '-m', 'pip', 'install', '--upgrade', library], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            if 'Requirement already satisfied' in result.stdout:
+                print(f"{library} already exists!")
+            else:
+                print(f"{library} has been installed successfully!")
+        except subprocess.CalledProcessError:
+            print(f"Failed to install {library}!")
 
     # Copy the SystemInfo.py script to the folder
     shutil.copy(Installer_Path, Install_Path)
@@ -71,6 +78,8 @@ def install():
 
     # Print the success message
     print("Sysinfo has been installed successfully!")
+
+    print("Please remove the installer directory manually: " + os.path.dirname(Installer_Path))
 
     # Check if the user wants to restart the terminal
     print("Please restart your terminal for the changes to take effect.")
