@@ -5,7 +5,7 @@ import sys
 import re
 import ast
 
-Install_Path = os.path.expanduser('~/SysInfo/SysInfo.py')
+Install_Path = os.path.expanduser('~/SysInfo')
 Installer_Path = os.path.abspath('SysInfo.py')
 
 # Function to get the version number from a Python script
@@ -42,7 +42,7 @@ def install():
         if 'True' in alias_check.stdout:
             print("Alias already exists.")
         else:
-            command = f'Add-Content -Path $PROFILE -Value "`nfunction {alias} {{ python {script_path} }}"'
+            command = f'Add-Content -Path $PROFILE -Value "`nfunction {alias} {{ python {Install_Path} }}"'
             subprocess.run(['powershell', '-Command', command], check=True)
             print("DEBUG: Alias added to existing profile.")
     else:
@@ -50,7 +50,7 @@ def install():
         user_input = input("A PowerShell profile does not exist. Do you want to create one? (y/n): ")
         if user_input.lower() == 'y':
             subprocess.run(['powershell', '-Command', 'New-Item -path $PROFILE -type file -force'], check=True)
-            command = f'Add-Content -Path $PROFILE -Value "`nfunction {alias} {{ python {script_path} }}"'
+            command = f'Add-Content -Path $PROFILE -Value "`nfunction {alias} {{ python {Install_Path} }}"'
             subprocess.run(['powershell', '-Command', command], check=True)
             print("DEBUG: Profile created and alias added.")
         else:
@@ -89,7 +89,7 @@ def install():
 if os.path.exists(Install_Path):
     # Get the version numbers
     Installer_Version = get_version_number(Installer_Path)
-    Existing_Version = get_version_number(Install_Path)
+    Existing_Version = get_version_number(Install_Path + '/SysInfo.py')
 
     # Compare the version numbers
     if Existing_Version == None or Installer_Version == None or Installer_Version > Existing_Version:
