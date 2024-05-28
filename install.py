@@ -34,27 +34,28 @@ if user_input.lower() == 'y':
     os.makedirs(folder_path, exist_ok=True)
 
     # Check if the PowerShell profile exists
-    profile_check = subprocess.run(['powershell', '-Command', 'Test-Path $PROFILE'], capture_output=True, text=True, encoding='utf-8', errors='ignore')
-    alias_check = subprocess.run(['powershell', '-Command', f'Get-Alias -Name {alias}'], capture_output=True, text=True, encoding='utf-8', errors='ignore')
+    profile_check = subprocess.run(['powershell', '-Command', 'Test-Path $PROFILE'], capture_output=True, text=True)
     if 'True' in profile_check.stdout:
-        if alias in alias_check.stdout:
-            pass
-            print("DEBUG: Alias already exists")
+        # Check if the alias already exists in the profile
+        alias_check = subprocess.run(['powershell', '-Command', f'if (Get-Command {alias} -ErrorAction SilentlyContinue) {{ "True" }} else {{ "False" }}'], capture_output=True, text=True)
+        if 'True' in alias_check.stdout:
+            print("Alias already exists.")
         else:
-            command = f'Add-Content -Path $PROFILE -Value "function SysInfo {{ python {script_path} }}"'
+            command = f'Add-Content -Path $PROFILE -Value "`nfunction {alias} {{ python {script_path} }}"'
             subprocess.run(['powershell', '-Command', command], check=True)
-            print("DEBUG: Profile existed, added alias")
-    # If the profile doesn't exist, ask the user if they want to create it
-    if 'False' in profile_check.stdout:
+            print("Alias added to existing profile.")
+    else:
+        # If the profile doesn't exist, ask the user if they want to create it
         user_input = input("A PowerShell profile does not exist. Do you want to create one? (y/n): ")
         if user_input.lower() == 'y':
             subprocess.run(['powershell', '-Command', 'New-Item -path $PROFILE -type file -force'], check=True)
-            command = f'Add-Content -Path $PROFILE -Value "function SysInfo {{ python {script_path} }}"'
+            command = f'Add-Content -Path $PROFILE -Value "`nfunction {alias} {{ python {script_path} }}"'
             subprocess.run(['powershell', '-Command', command], check=True)
-            print("DEBUG: Profile didn't exist, created and added alias")
+            print("Profile created and alias added.")
         else:
             print("Quitting installation...")
             sys.exit(0)
+
 
     # List of necessary libraries
     libraries = ['psutil', 'screeninfo', 'py-cpuinfo', 'colorama']
@@ -68,13 +69,7 @@ if user_input.lower() == 'y':
 
     # Update the script path to the new location
     script_path = os.path.join(folder_path, 'SysInfo.py')
-
-    # PowerShell command to add the alias
-    #command = f'Add-Content -Path $PROFILE -Value "function SysInfo {{ python {script_path} }}"'
-
-    # Run the command in PowerShell
-    #subprocess.run(['powershell', '-Command', command], check=True)
-
+    
     # Print the success message
     print("Sysinfo has been installed successfully!")
 
