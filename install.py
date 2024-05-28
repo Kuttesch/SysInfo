@@ -19,6 +19,7 @@ def get_version_number(script_path):
         return version_number
     else:
         return None
+        print("DEBUG: Version number of {script_path} not found.")
 
 
 # Function to install the SysInfo script
@@ -28,7 +29,10 @@ def install():
     print("Installing Sysinfo...")
 
     # Create the folder
-    os.makedirs(Install_Path, exist_ok=True)
+    if os.path.exists(Install_Path):
+        pass
+    else:
+        os.makedirs(Install_Path, exist_ok=True)
 
     # Check if the PowerShell profile exists
     profile_check = subprocess.run(['powershell', '-Command', 'Test-Path $PROFILE'], capture_output=True, text=True)
@@ -62,7 +66,7 @@ def install():
         subprocess.run([sys.executable, '-m', 'pip', 'install', library])
 
     # Copy the SystemInfo.py script to the folder
-    shutil.copy(Installer_Path, os.path.join(folder_path, 'SysInfo.py'))
+    shutil.copy(Installer_Path, Install_Path)
 
 
     # Print the success message
@@ -79,27 +83,30 @@ if os.path.exists(Install_Path):
     Existing_Version = get_version_number(Install_Path)
 
     # Compare the version numbers
-    if Installer_Version == None or Existing_Version == None:
-        check = input("Do you want to install SysInfo? (y/n): ")
+    if Existing_Version == None or Installer_Version == None or Installer_Version > Existing_Version:
+        print("A newer version of SysInfo is available.")
+        check = input("Do you want to update SysInfo? (y/n): ")
         if check.lower() == 'y':
             install()
-    else:
-        if Installer_Version > Existing_Version:
-            print("A newer version of SysInfo is available.")
-            check = input("Do you want to update SysInfo? (y/n): ")
-            if check.lower() == 'y':
-                install()
-            else:
-                print("Quitting installation...")
-                sys.exit(0)
         else:
-            print("You already have the latest version of SysInfo.")
-            check = input("Do you want to reinstall SysInfo? (y/n): ")
-            if check.lower() == 'y':
-                install()
-            else:
-                print("Quitting installation...")
-                sys.exit(0)
+            print("Quitting installation...")
+            sys.exit(0)
+    elif Installer_Version < Existing_Version:
+        print("You have a newer version of SysInfo than the one you're trying to install.")
+        check = input("Do you want to downgrade SysInfo? (y/n): ")
+        if check.lower() == 'y':
+            install()
+        else:
+            print("Quitting installation...")
+            sys.exit(0)
+    else:
+        print("You already have the latest version of SysInfo.")
+        check = input("Do you want to reinstall SysInfo? (y/n): ")
+        if check.lower() == 'y':
+            install()
+        else:
+            print("Quitting installation...")
+            sys.exit(0)
 else:
     check = input("Do you want to install SysInfo? (y/n): ")
     if check.lower() == 'y':
