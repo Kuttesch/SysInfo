@@ -96,3 +96,4 @@ part2 = "\n".join([
 for line1, line2 in zip_longest(part1.split("\n"), part2.split("\n"), fillvalue=''):
     print("{:<40} {:<40}".format(line1, line2))
 print(Style.RESET_ALL)
+Fore.RESET
