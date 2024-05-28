@@ -15,6 +15,7 @@ SysInfo is a Python project that provides detailed system information in the Ter
 To install System Information, you need to run the installation script. This script will ask you if you want to install Sysinfo and the necessary libraries. It will also check if the PowerShell profile exists and if not, it will ask you if you want to create one. It will ask you if you want to use the default install path or specify your own. It will then install the necessary libraries, copy the `SystemInfo.py` script to the specified folder, and update the PowerShell profile to add an alias for Sysinfo.
 
 ```bash
+cd YourDownloadDirection
 git clone https://github.com/Kuttesch/SysInfo.git
 cd SysInfo
 python install.py
