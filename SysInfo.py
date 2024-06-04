@@ -7,7 +7,7 @@ import datetime
 from colorama import Fore, Style
 from itertools import zip_longest
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 # Check the operating system
 os_info = "OS:      {}{}".format(Fore.WHITE, platform.system())
