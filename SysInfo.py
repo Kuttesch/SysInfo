@@ -48,7 +48,7 @@ for disk in psutil.disk_partitions():
         disk_info.append("({}):    [Permission Denied]".format(disk.device))
 
 # Part 1
-# if os_info == "Apple":
+if platform.system() == "Windows":
     part1 = "\n".join([
         Fore.BLUE + "llllllllll llllllllll",
         Fore.BLUE + "llllllllll llllllllll",
@@ -60,7 +60,7 @@ for disk in psutil.disk_partitions():
         Fore.BLUE + "llllllllll llllllllll",
         Fore.BLUE + "llllllllll llllllllll",
     ])
-""" elif os_info == "Arch":
+elif platform.system() == "Arch":
     part1 = "\n".join([
         Fore.BLUE + "                     ",
         Fore.BLUE + "          ll         ",
@@ -72,20 +72,33 @@ for disk in psutil.disk_partitions():
         Fore.BLUE + "   llllll    llllll  ",
         Fore.BLUE + " ll                ll",
         ])
-elif os_info == "Windows":
+elif platform.system() == "Apple":
     part1 = "\n".join([
-        Fore.WHITE +  "               (     ",
+        Fore.GREEN +  "               (     ",
         Fore.GREEN +  "           ((((      ",
         Fore.GREEN +  "           (((       ",
         Fore.GREEN +  "   ((((((((((((((((( ",
-        Fore.RED +    " ,,,,,,,,,,,,,,,,,,  ",
+        Fore.YELLOW + "  (((((((((((((((((  ",
+        Fore.YELLOW + " /////////////////   ",
         Fore.RED +    " /////////////////   ",
-        Fore.RED +    " /////////////////   ",
-        Fore.RED +    " ((((((((((((((((((( ",
+        Fore.MAGENTA + " ((((((((((((((((((( ",
         Fore.BLUE +   "  (((((((((((((((((((",
         Fore.BLUE +   "    (((((((((((((((  ",
         ])
-"""
+else:
+    print("Unsupported OS")
+    part1 = "\n".join([
+        Fore.RED + "                ///  ",
+        Fore.RED + "              ///    ",
+        Fore.RED + "            ///      ",
+        Fore.RED + "          ///        ",
+        Fore.RED + "        ///          ",
+        Fore.RED + "      ///            ",
+        Fore.RED + "    ///              ",
+        Fore.RED + "  ///                ",
+        Fore.RED + "///                  ",
+    ])
+
 part2 = "\n".join([
     os_info,
     uptime_info,
