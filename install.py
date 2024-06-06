@@ -181,6 +181,8 @@ def installLinux():
         else:
             quitMessage()
 
+    libInstall()
+
     # Copy the SystemInfo.py script to the folder
     shutil.copy(Installer_Path, Install_Path_Linux)
 
