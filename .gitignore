@@ -2,3 +2,6 @@
 .idea/SysInfo.iml
 .idea/vcs.xml
 install copy.py
+.idea/.gitignore
+.idea/misc.xml
+.idea/inspectionProfiles/profiles_settings.xml
