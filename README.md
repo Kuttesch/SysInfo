@@ -46,7 +46,8 @@ llllllllll llllllllll
 
 ## Bugs
 
-Currently, there is only a bug that I am aware of. The script does not work on Linux or MacOS. This is because the script uses the `psutil` library, which is not available on Linux or MacOS. I am working on a solution to this problem.
+Currently, there is only a bug that I am aware of. The script does not work on Linux or MacOS.  
+I am currently working on a solution to this problem.
 
 ## Contributing
 
