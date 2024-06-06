@@ -113,15 +113,13 @@ def quitMessage():
     print("Quitting installation...")
     sys.exit(0)
 
-# Function to install the SysInfo script
+
 def installWindows():
 
-    print("Installing Sysinfo...")
+    print("Installing Sysinfo for Windows...")
 
     # Create the folder
-    if os.path.exists(Install_Path_Windows):
-        pass
-    else:
+    if not os.path.exists(Install_Path_Windows):
         os.makedirs(Install_Path_Windows, exist_ok=True)
 
     # Check if the PowerShell profile exists
@@ -155,15 +153,51 @@ def installWindows():
 
     successMessage()
 
+def installLinux():
+
+    print("Installing Sysinfo for Linux...")
+
+    # Create the folder
+    if not os.path.exists(Install_Path_Linux):
+        os.makedirs(Install_Path_Linux, exist_ok=True)
+
+    # Check if the bash profile exists
+    profile_check = subprocess.run(['bash', '-c', 'test -f ~/.bashrc && echo "True" || echo "False"'], capture_output=True, text=True)
+    if 'True' in profile_check.stdout:
+        # Check if the alias already exists in the profile
+        alias_check = subprocess.run(['bash', '-c', f'alias | grep -q "{alias}=" && echo "True" || echo "False"'], capture_output=True, text=True)
+        if 'True' in alias_check.stdout:
+            print("Alias already exists.")
+        else:
+            command = f'echo "alias {alias}=\'python {Install_Path_Linux}\'" >> ~/.bashrc'
+            subprocess.run(['bash', '-c', command], check=True)
+    else:
+        user_input = input("A bash profile does not exist. Do you want to create one? (y/n): ")
+        if user_input.lower() == 'y':
+            subprocess.run(['touch', '~/.bashrc'], check=True)
+            command = f'echo "alias {alias}=\'python {Install_Path_Linux}\'" >> ~/.bashrc'
+            subprocess.run(['bash', '-c', command], check=True)
+            print("Profile created and alias added.")
+        else:
+            quitMessage()
+
+    # Copy the SystemInfo.py script to the folder
+    shutil.copy(Installer_Path, Install_Path_Linux)
+
+    successMessage()
+
 def main():
     os_type = osCheck()
     if os_type == 'Windows':
         VersionStatus = checkVersion(Install_Path_Windows)
         switchInstall(VersionStatus, 'Windows')
     elif os_type == 'Linux':
-        checkVersion(Install_Path_Linux)
+        VersionStatus = checkVersion(Install_Path_Linux)
         switchInstall(VersionStatus, 'Linux')
     else:
         print("Unsupported OS.")
         quitMessage()
 
+
+if __name__ == "__main__":
+    main()
