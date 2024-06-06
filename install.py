@@ -23,6 +23,7 @@ def get_version_number(script_path):
     version_assignments = [node for node in module.body if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name) and node.targets[0].id == '__version__']
     if version_assignments:
         version_number = version_assignments[0].value.s
+        print(f"DEBUG: Version number of {script_path} is {version_number}.")
         return version_number
     else:
         return None
@@ -32,10 +33,13 @@ def get_version_number(script_path):
 def osCheck():
     if sys.platform == 'win32':
         return 'Windows'
+        print("DEBUG: Windows OS detected.")
     elif sys.platform == 'linux':
         return 'Linux'
+        print("DEBUG: Linux OS detected.")
     else:
         return None
+        print("DEBUG: Unsupported OS detected.")
 
 # Function to install the required libraries
 def libInstall():
@@ -49,11 +53,60 @@ def libInstall():
         except subprocess.CalledProcessError:
             print(f"Failed to install {library}!")
 
-def successMessage():
+def checkVersion(Install_Path):
+    if os.path.exists(Install_Path):
+        Installer_Version = get_version_number(Installer_Path)
+        Existing_Version = get_version_number(Install_Path + '/SysInfo.py')
 
+        # Compare the version numbers
+        if Existing_Version == None or Installer_Version == None or Installer_Version > Existing_Version:
+            # Newer version
+            return 1
+                
+        elif Installer_Version < Existing_Version:
+            # Older version
+            return 2
+        else:
+            # Same version
+            return 3
+    else:
+        # No version
+        return 0
+
+def switchInstall(VersionStatus, OSVersion):
+    InstallVersion = "install" + OSVersion + "()"
+    if VersionStatus == 0:
+        check = input("Do you want to install SysInfo? (y/n): ")
+        if check.lower() == 'y':
+            exec(InstallVersion)
+        else:
+            quitMessage()
+    elif VersionStatus == 1:
+        print("You have a newer version of SysInfo than the one you're trying to install.")
+        check = input("Do you want to downgrade SysInfo? (y/n): ")
+        if check.lower() == 'y':
+            exec(InstallVersion)
+        else:
+            quitMessage()
+    elif VersionStatus == 2:
+        print("A newer version of SysInfo is available.")
+        check = input("Do you want to update SysInfo? (y/n): ")
+        if check.lower() == 'y':
+            exec(InstallVersion)
+        else:
+            quitMessage()
+    elif VersionStatus == 3:
+        print("You already have the latest version of SysInfo.")
+        check = input("Do you want to reinstall SysInfo? (y/n): ")
+        if check.lower() == 'y':
+            exec(InstallVersion)
+        else:
+            quitMessage()
+
+
+def successMessage():
     print("Sysinfo has been installed successfully!")
     print("Please remove the installer directory manually: " + os.path.dirname(Installer_Path))
-    # Check if the user wants to restart the terminal
     print("Please restart your terminal for the changes to take effect.")
 
 def quitMessage():
@@ -102,38 +155,15 @@ def installWindows():
 
     successMessage()
 
-# Check if there's already a version of SysInfo at the target destination
-if os.path.exists(Install_Path_Windows):
-    # Get the version numbers
-    Installer_Version = get_version_number(Installer_Path)
-    Existing_Version = get_version_number(Install_Path_Windows + '/SysInfo.py')
-
-    # Compare the version numbers
-    if Existing_Version == None or Installer_Version == None or Installer_Version > Existing_Version:
-        print("A newer version of SysInfo is available.")
-        check = input("Do you want to update SysInfo? (y/n): ")
-        if check.lower() == 'y':
-            installWindows()
-        else:
-            quitMessage()
-            
-    elif Installer_Version < Existing_Version:
-        print("You have a newer version of SysInfo than the one you're trying to install.")
-        check = input("Do you want to downgrade SysInfo? (y/n): ")
-        if check.lower() == 'y':
-            installWindows()
-        else:
-            quitMessage()
+def main():
+    os_type = osCheck()
+    if os_type == 'Windows':
+        VersionStatus = checkVersion(Install_Path_Windows)
+        switchInstall(VersionStatus, 'Windows')
+    elif os_type == 'Linux':
+        checkVersion(Install_Path_Linux)
+        switchInstall(VersionStatus, 'Linux')
     else:
-        print("You already have the latest version of SysInfo.")
-        check = input("Do you want to reinstall SysInfo? (y/n): ")
-        if check.lower() == 'y':
-            installWindows()
-        else:
-            quitMessage()
-else:
-    check = input("Do you want to install SysInfo? (y/n): ")
-    if check.lower() == 'y':
-        installWindows()
-    else:
+        print("Unsupported OS.")
         quitMessage()
+
