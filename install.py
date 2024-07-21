@@ -11,7 +11,7 @@ Installer_Path = os.path.abspath('SysInfo.py')
 Install_Path_Windows = os.path.expanduser('~/SysInfo')
 Install_Path_Linux = os.path.expanduser('~/.local/bin/SysInfo')
 
-libraries = ['psutil', 'screeninfo', 'py-cpuinfo', 'colorama']
+libraries = ['psutil', 'screeninfo', 'py-cpuinfo', 'colorama', 'requests']
 
 alias = "SysInfo"
 

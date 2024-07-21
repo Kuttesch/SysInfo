@@ -31,6 +31,10 @@ screen_info = "Screen:  {}{}*{}{}".format(Fore.WHITE, primary_monitor.width, pri
 # Get the CPU information
 cpu_info = "CPU:     {}{}".format(Fore.WHITE, get_cpu_info()['brand_raw'])
 
+pub_ip = get("https://api.ipify.org").text
+pub_ip_info = "Pub IP:  {}{}{}".format(Fore.WHITE, pub_ip, Style.RESET_ALL)
+
+
 # Get the current memory usage
 memory = psutil.virtual_memory()
 ram_bar = "/" * int(memory.percent / 2) + " " * (50 - int(memory.percent / 2))
@@ -50,8 +54,6 @@ for disk in psutil.disk_partitions():
         disk_info.append("({}):    [Permission Denied]".format(disk.device))
 
 
-pub_ip = get("https://api.ipify.org").text
-pub_ip_info = "Pub IP:  {}{}{}".format(Fore.WHITE, pub_ip, Style.RESET_ALL)
 
 
 
