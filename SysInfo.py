@@ -1,11 +1,13 @@
 import os
 import platform
 import psutil
+import math
 from screeninfo import get_monitors
 from cpuinfo import get_cpu_info
 import datetime
 from colorama import Fore, Style
 from itertools import zip_longest
+from requests import get
 
 __version__ = "0.0.2"
 
@@ -47,9 +49,16 @@ for disk in psutil.disk_partitions():
     except (PermissionError, OSError):
         disk_info.append("({}):    [Permission Denied]".format(disk.device))
 
+
+pub_ip = get("https://api.ipify.org").text
+pub_ip_info = "Pub IP:  {}{}{}".format(Fore.WHITE, pub_ip, Style.RESET_ALL)
+
+
+
 # Part 1
+
 if platform.system() == "Windows":
-    part1 = "\n".join([
+    os_logo = "\n".join([
         Fore.BLUE + "llllllllll llllllllll",
         Fore.BLUE + "llllllllll llllllllll",
         Fore.BLUE + "llllllllll llllllllll",
@@ -60,8 +69,10 @@ if platform.system() == "Windows":
         Fore.BLUE + "llllllllll llllllllll",
         Fore.BLUE + "llllllllll llllllllll",
     ])
+    os_color_start = Fore.BLUE
+    os_color_end = Fore.BLUE
 elif platform.system() == "Arch":
-    part1 = "\n".join([
+    os_logo = "\n".join([
         Fore.BLUE + "                     ",
         Fore.BLUE + "          ll         ",
         Fore.BLUE + "         llll        ",
@@ -72,8 +83,10 @@ elif platform.system() == "Arch":
         Fore.BLUE + "   llllll    llllll  ",
         Fore.BLUE + " ll                ll",
         ])
+    os_color_start = Fore.BLUE
+    os_color_end = Fore.BLUE
 elif platform.system() == "Apple":
-    part1 = "\n".join([
+    os_logo = "\n".join([
         Fore.GREEN +  "               (     ",
         Fore.GREEN +  "           ((((      ",
         Fore.GREEN +  "           (((       ",
@@ -85,9 +98,10 @@ elif platform.system() == "Apple":
         Fore.BLUE +   "  (((((((((((((((((((",
         Fore.BLUE +   "    (((((((((((((((  ",
         ])
+    os_color_start = Fore.GREEN
+    os_color_end = Fore.BLUE
 else:
-    print("Unsupported OS")
-    part1 = "\n".join([
+    os_logo = "\n".join([
         Fore.RED + "                ///  ",
         Fore.RED + "              ///    ",
         Fore.RED + "            ///      ",
@@ -98,14 +112,39 @@ else:
         Fore.RED + "  ///                ",
         Fore.RED + "///                  ",
     ])
+    os_color_start = Fore.RED
+    os_color_end = Fore.RED
 
 part2 = "\n".join([
     os_info,
     uptime_info,
     screen_info,
     cpu_info,
+    pub_ip_info,
     ram_info,
 ] + disk_info)
+
+# Calculate Spacing
+if part2.count("\n") - os_logo.count("\n") <= 1:
+    spacing_top_rows = part2.count("\n") - os_logo.count("\n")
+    spacing_bottom_rows = 0
+else:
+    # Use math.ceil for even distribution of extra rows
+    spacing_top_rows = math.ceil((part2.count("\n") - os_logo.count("\n")) / 2)
+    spacing_bottom_rows = math.floor((part2.count("\n") - os_logo.count("\n")) / 2)  
+
+# Create Spacing Strings
+spacing_top = os_color_start + "                "  # Simplified spacing string
+spacing_bottom = os_color_end + "                " 
+
+# Construct part1
+part1 = "\n".join([
+    *(spacing_top for _ in range(spacing_top_rows)),  # Use unpacking (*)
+    os_logo,
+    *(spacing_bottom for _ in range(spacing_bottom_rows)) 
+])
+
+
 
 # Print in two columns
 for line1, line2 in zip_longest(part1.split("\n"), part2.split("\n"), fillvalue=''):
