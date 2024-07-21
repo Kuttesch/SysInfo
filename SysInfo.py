@@ -9,7 +9,7 @@ from colorama import Fore, Style
 from itertools import zip_longest
 from requests import get
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 # Check the operating system
 os_info = "OS:      {}{}".format(Fore.WHITE, platform.system())
